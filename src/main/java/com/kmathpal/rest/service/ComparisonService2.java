@@ -28,7 +28,7 @@ public class ComparisonService2 {
     }
 
     public boolean compareLinks(List<String> listA, List<String> listB) throws IOException, InvalidFormatException {
-        InputStream inp = new FileInputStream("/Users/kartikmathpal/Downloads/RESTfulExample/src/main/java/com/kmathpal/rest/Model/resturlCompare.xlsx");
+        InputStream inp = new FileInputStream("src/main/java/com/kmathpal/rest/Model/resturlCompare.xlsx");
         Workbook workbook = WorkbookFactory.create(inp);
         Sheet sheet = workbook.getSheetAt(0);
 
