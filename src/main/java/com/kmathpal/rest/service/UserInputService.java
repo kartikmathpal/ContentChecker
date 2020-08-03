@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,6 @@ public class UserInputService {
                 "<p> Time taken to complete the request : "+ "timetaken"+" minutes.</p>"+
                 "</body></html>";
         /**/
-        return Response.status(200).entity(output).build();
+        return Response.status(200).entity(output).location(URI.create("https://testasuo.herokuapp.com/rest/input/push")).build();
     }
 }
