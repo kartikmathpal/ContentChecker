@@ -5,10 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.FileNotFoundException;
@@ -24,7 +21,7 @@ public class UserInputService {
     public UserInputService() throws FileNotFoundException {
     }
 
-    @POST
+    @GET
     @Path("/push")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response userInput(@FormParam("envA") String envA,

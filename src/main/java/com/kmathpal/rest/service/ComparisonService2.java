@@ -16,17 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ComparisonService2 {
-//    File file = new File(
-//            getClass().getClassLoader().getResource("resturlCompare.xlsx").getFile()
-//    );
-
-    //ClassLoader classLoader = getClass().getClassLoader();
-    //File file = new File(classLoader.getResource("com/kmathpal/resturlCompare.xlsx").getFile());
-    //InputStream inputStream = new FileInputStream(file);
-
-    public ComparisonService2() throws FileNotFoundException {
-    }
-
     public void compareLinks(List<String> listA, List<String> listB) throws IOException, InvalidFormatException {
         InputStream inp = new FileInputStream("src/main/java/com/kmathpal/rest/Model/resturlCompare.xlsx");
         Workbook workbook = WorkbookFactory.create(inp);
