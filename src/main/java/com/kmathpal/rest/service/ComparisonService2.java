@@ -108,6 +108,7 @@ public class ComparisonService2 {
                 response += "No MisMatch\n}";
             row.createCell(2).setCellValue(misMatchFlag == true ? "Fail" : "Pass");
             row.createCell(3).setCellValue(response);
+            System.out.println("Row No "+ j+" processed");
         }
 
         //save data to file:
