@@ -105,7 +105,7 @@ public class ComparisonService2 {
 
         //save data to file:
         inp.close();
-        FileOutputStream fileOut = new FileOutputStream("src/main/java/com/kmathpal/rest/Model/resturlCompare.xlsx");
+        FileOutputStream fileOut = new FileOutputStream("http://testasuo.herokuapp.com/RESTfulExample/Response.html");
         workbook.write(fileOut);
         fileOut.close();
 
