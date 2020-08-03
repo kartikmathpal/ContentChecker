@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 @Path("/excel")
 public class ExcelService {
 
-    private static final String FILE_PATH = "src/main/java/com/kmathpal/resturlCompare.xlsx";
+    private static final String FILE_PATH = "/Users/kartikmathpal/Downloads/RESTfulExample/src/main/java/com/kmathpal/rest/Model/resturlCompare.xlsx";
 
     @GET
     @Path("/get")
