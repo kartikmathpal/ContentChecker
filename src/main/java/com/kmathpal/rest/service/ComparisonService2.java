@@ -27,7 +27,7 @@ public class ComparisonService2 {
     public ComparisonService2() throws FileNotFoundException {
     }
 
-    public boolean compareLinks(List<String> listA, List<String> listB) throws IOException, InvalidFormatException {
+    public void compareLinks(List<String> listA, List<String> listB) throws IOException, InvalidFormatException {
         InputStream inp = new FileInputStream("src/main/java/com/kmathpal/rest/Model/resturlCompare.xlsx");
         Workbook workbook = WorkbookFactory.create(inp);
         Sheet sheet = workbook.getSheetAt(0);
@@ -100,15 +100,18 @@ public class ComparisonService2 {
                 j++;
                 //r++;
             }
+
             response = "{\nEnvironmentA   :" + listA.get(j).toString() + "\n" +
                     "EnvironmentB   :" + listB.get(j).toString() + "\n";
+
             if (misMatchFlag)
                 response += "MisMatch :\n" + mismatches;
             else
                 response += "No MisMatch\n}";
+
             row.createCell(2).setCellValue(misMatchFlag == true ? "Fail" : "Pass");
             row.createCell(3).setCellValue(response);
-            System.out.println("Row No "+ j+" processed");
+            System.out.println("Row--> "+j);
         }
 
         //save data to file:
@@ -117,6 +120,6 @@ public class ComparisonService2 {
         workbook.write(fileOut);
         fileOut.close();
 
-        return misMatchFlag;
+        System.out.println("Data written to Sheet!!, process completed");
     }
 }
