@@ -105,7 +105,7 @@ public class ComparisonService2 {
 
         //save data to file:
         inp.close();
-        FileOutputStream fileOut = new FileOutputStream("http://testasuo.herokuapp.com/RESTfulExample/Response.html");
+        FileOutputStream fileOut = new FileOutputStream("https://testasuo.herokuapp.com/Response.html");
         workbook.write(fileOut);
         fileOut.close();
 
