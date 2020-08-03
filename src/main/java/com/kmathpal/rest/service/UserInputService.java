@@ -56,6 +56,8 @@ public class UserInputService {
                 "<p> Time taken to complete the request : "+ "timetaken"+" minutes.</p>"+
                 "</body></html>";
         /**/
-        return Response.status(200).entity(output).location(URI.create("https://testasuo.herokuapp.com/rest/input/push")).build();
+        return Response.temporaryRedirect(URI.create("src/main/webapp/Response.html")).build();
+
+        //return Response.status(200).location(URI.create("http://localhost:8080/RESTfulExample/Response.html")).build();
     }
 }
