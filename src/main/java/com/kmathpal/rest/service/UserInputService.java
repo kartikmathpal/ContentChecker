@@ -47,6 +47,7 @@ public class UserInputService {
         }
 
         comparisonService2.compareLinks(envA_Url_List,envB_Url_List);
+        System.out.println("Service Task Completed!!!");
         /* */
         //long endTime = System.currentTimeMillis();
         //long timetaken = (endTime-startTime)/60000;
