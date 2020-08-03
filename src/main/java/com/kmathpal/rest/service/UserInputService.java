@@ -21,7 +21,7 @@ public class UserInputService {
     public UserInputService() throws FileNotFoundException {
     }
 
-    @GET
+    @POST
     @Path("/push")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response userInput(@FormParam("envA") String envA,
@@ -50,7 +50,7 @@ public class UserInputService {
                 "<h2>Sheet Processed!!</h2>" +
                 "<p>Click the link to Download</p>"+
                 "<p>"+
-                "<a href=\"https://testasuo.herokuapp.com/rest/excel/get\">Result sheet</a>"+
+                "<a href=\"/rest/excel/get\">Result sheet</a>"+
                 "</p>"+
                 "<p> Time taken to complete the request : "+ "timetaken"+" minutes.</p>"+
                 "</body></html>";
