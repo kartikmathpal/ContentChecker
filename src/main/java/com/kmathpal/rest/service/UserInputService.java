@@ -42,21 +42,22 @@ public class UserInputService {
             envB_Url_List.add("https://"+envB+link.text());
         }
 
-        comparisonService2.compareLinks(envA_Url_List,envB_Url_List);
-        System.out.println("Service Task Completed!!!");
+       return comparisonService2.compareLinks(envA_Url_List,envB_Url_List);
+//        System.out.println("Service Task Completed!!!");
 //        long endTime = System.currentTimeMillis();
 //        long timetaken = (endTime-startTime)/60000;
 //        System.out.println(timetaken);
-        String output = "<html><body>" +
-                "<h2>Sheet Processed!!</h2>" +
-                "<p>Click the link to Download</p>"+
-                "<p>"+
-                "<a href=\"/rest/excel/get\">Result sheet</a>"+
-                "</p>"+
-                "<p> Time taken to complete the request : "+ "timetaken"+" minutes.</p>"+
-                "</body></html>";
+//        String output = "<html><body>" +
+//                "<h2>Sheet Processed!!</h2>" +
+//                "<p>Click the link to Download</p>"+
+//                "<p>"+
+//                "<a href=\"/rest/excel/get\">Result sheet</a>"+
+//                "</p>"+
+//                "<p> Time taken to complete the request : "+ "timetaken"+" minutes.</p>"+
+//                "</body></html>";
         /**/
-        return Response.temporaryRedirect(URI.create("https://testasuo.herokuapp.com/Response.html")).build();
+
+        //return Response.temporaryRedirect(URI.create("https://testasuo.herokuapp.com/Response.html")).build();
 
         //return Response.status(200).location(URI.create("http://localhost:8080/RESTfulExample/Response.html")).build();
     }

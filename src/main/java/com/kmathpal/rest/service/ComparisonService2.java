@@ -10,13 +10,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.ws.rs.core.Response;
 import java.io.*;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ComparisonService2 {
-    public void compareLinks(List<String> listA, List<String> listB) throws IOException, InvalidFormatException {
+
+    public Response compareLinks(List<String> listA, List<String> listB) throws IOException, InvalidFormatException {
         InputStream inp = new FileInputStream("src/main/java/com/kmathpal/rest/Model/resturlCompare.xlsx");
         Workbook workbook = WorkbookFactory.create(inp);
         Sheet sheet = workbook.getSheetAt(0);
@@ -109,6 +112,6 @@ public class ComparisonService2 {
         workbook.write(fileOut);
         fileOut.close();
 
-        System.out.println("Data written to Sheet!!, process completed");
+        return Response.temporaryRedirect(URI.create("https://testasuo.herokuapp.com/Response.html")).build();
     }
 }
