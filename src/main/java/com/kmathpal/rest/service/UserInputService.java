@@ -48,17 +48,16 @@ public class UserInputService {
 
         comparisonService2.compareLinks(envA_Url_List,envB_Url_List);
         System.out.println("Service Task Completed!!!");
-        /* */
-        //long endTime = System.currentTimeMillis();
-        //long timetaken = (endTime-startTime)/60000;
-        //System.out.println(timetaken);
+        long endTime = System.currentTimeMillis();
+        long timetaken = (endTime-startTime)/60000;
+        System.out.println(timetaken);
         String output = "<html><body>" +
                 "<h2>Sheet Processed!!</h2>" +
                 "<p>Click the link to Download</p>"+
                 "<p>"+
-                "<a href=\"https://testasuo.herokuapp.com/rest/excel/get\">Result sheet</a>"+
+                "<a href=\"http://localhost:8080/RESTfulExample/rest/excel/get\">Result sheet</a>"+
                 "</p>"+
-                "<p> Time taken to complete the request : "+ "timetaken" +" minutes.</p>"+
+                "<p> Time taken to complete the request : "+ timetaken+" minutes.</p>"+
                 "</body></html>";
         /**/
         return Response.status(200).entity(output).build();
