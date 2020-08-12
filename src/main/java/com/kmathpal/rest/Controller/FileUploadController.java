@@ -23,7 +23,7 @@ public class FileUploadController {
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail) throws InterruptedException, IOException, InvalidFormatException {
 
-        String uploadedFileLocation = "src/main/java/com/kmathpal/rest/Model/UploadedFile/"
+        String uploadedFileLocation = "src/main/java/com/kmathpal/rest/Model/UploadedSheets/"
                 + fileDetail.getFileName();
             return fileUploadService.uploadFile(uploadedInputStream,uploadedFileLocation);
     }
