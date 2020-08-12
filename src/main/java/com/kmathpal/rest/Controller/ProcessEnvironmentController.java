@@ -26,7 +26,7 @@ public class ProcessEnvironmentController {
         String path = "src/main/java/com/kmathpal/rest/Model/resturlCompare.xlsx";
         processURLInputService.processEnvironments(envA,envB,path);
         ExcelService.setPath(path);
-        return Response.temporaryRedirect(URI.create("http://localhost:8080/download.html")).build();
+        return Response.temporaryRedirect(URI.create("https://contentchecker.herokuapp.com/download.html")).build();
 
     }
 }

@@ -15,7 +15,7 @@ public class FileUploadService {
         comparisonService.compareLinks(uploadedFileLocation);
 
         ExcelService.setPath(uploadedFileLocation);
-        return Response.temporaryRedirect(URI.create("http://localhost:8080/download.html")).build();
+        return Response.temporaryRedirect(URI.create("https://contentchecker.herokuapp.com/download.html")).build();
     }
 
     // save uploaded file to new location
