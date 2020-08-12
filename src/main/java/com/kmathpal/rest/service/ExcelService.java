@@ -34,7 +34,7 @@ public class ExcelService {
     @Produces("application/vnd.ms-excel")
     public Response getTemplate() {
 
-        File file = new File("/Users/kartikmathpal/Documents/JavaProjects/ContentChecker/src/main/java/com/kmathpal/rest/Model/Template/template.xlsx");
+        File file = new File("src/main/java/com/kmathpal/rest/Model/Template/template.xlsx");
 
         ResponseBuilder response = Response.ok((Object) file);
         response.header("Content-Disposition",
