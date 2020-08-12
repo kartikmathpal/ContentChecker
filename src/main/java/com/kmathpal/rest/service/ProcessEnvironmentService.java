@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ProcessEnvironmentService {
-    public void processEnvironments(String envA, String envB) throws IOException, InvalidFormatException {
+    public void processEnvironments(String envA, String envB,String path) throws IOException, InvalidFormatException {
         List<String> listA = new ArrayList<>();
         List<String> listB = new ArrayList<>();
         Document doc = Jsoup.connect("https://asuords.edpl.us/preview/").get();
@@ -32,7 +32,7 @@ public class ProcessEnvironmentService {
             listB.add("https://"+envB+link.text());
         }
         //access sheet to write data
-        InputStream inp = new FileInputStream("C:\\Users\\Edplus\\Desktop\\kartikM\\ContentChecker\\src\\main\\java\\com\\kmathpal\\rest\\Model\\resturlCompare.xlsx");
+        InputStream inp = new FileInputStream(path);
         Workbook workbook = WorkbookFactory.create(inp);
         Sheet sheet = workbook.getSheetAt(0);
         List<String> tagList = new ArrayList<>(Arrays.asList("title", "h1", "h2", "h3", "h4", "h5", "h6", "p", "a", "href", "ul", "li"));
@@ -120,7 +120,7 @@ public class ProcessEnvironmentService {
 
         //save data to file:
         inp.close();
-        FileOutputStream fileOut = new FileOutputStream("C:\\Users\\Edplus\\Desktop\\kartikM\\ContentChecker\\src\\main\\java\\com\\kmathpal\\rest\\Model\\resturlCompare.xlsx");
+        FileOutputStream fileOut = new FileOutputStream(path);
         workbook.write(fileOut);
         fileOut.close();
     }

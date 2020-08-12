@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 @Path("/excel")
 public class ExcelService {
 
-    private static final String FILE_PATH = "C:\\Users\\Edplus\\Desktop\\kartikM\\ContentChecker\\src\\main\\java\\com\\kmathpal\\rest\\Model\\resturlCompare.xlsx";
+    //private static final String FILE_PATH = "C:\\Users\\Edplus\\Desktop\\kartikM\\ContentChecker\\src\\main\\java\\com\\kmathpal\\rest\\Model\\resturlCompare.xlsx";
     public static String path = "";
 
     public static void setPath(String path) {

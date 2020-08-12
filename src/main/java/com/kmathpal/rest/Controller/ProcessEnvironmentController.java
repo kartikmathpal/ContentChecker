@@ -23,8 +23,9 @@ public class ProcessEnvironmentController {
     public Response compareURLDomains(@FormParam("envA") String envA,
                                       @FormParam("envB") String envB) throws IOException, InvalidFormatException {
         ProcessEnvironmentService processURLInputService= new ProcessEnvironmentService();
-        processURLInputService.processEnvironments(envA,envB);
-        ExcelService.setPath("C:\\Users\\Edplus\\Desktop\\kartikM\\ContentChecker\\src\\main\\java\\com\\kmathpal\\rest\\Model\\resturlCompare.xlsx");
+        String path = "/Users/kartikmathpal/Documents/JavaProjects/ContentChecker/src/main/java/com/kmathpal/rest/Model/resturlCompare.xlsx";
+        processURLInputService.processEnvironments(envA,envB,path);
+        ExcelService.setPath(path);
         return Response.temporaryRedirect(URI.create("http://localhost:8080/download.html")).build();
 
     }
