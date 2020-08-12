@@ -10,8 +10,10 @@
 <body>
 
 <div class="container-fluid" class="p-3 mb-2 bg-light text-dark">
-    <img class="img-fluid" alt="Responsive image" alt="A S U" width="120" height="80"
-         src="https://edplus.asu.edu/sites/default/files/ASU%20Online%20logo%201.23.17.png">
+    <a href="https://contentchecker.herokuapp.com/">
+        <img class="img-fluid" alt="Responsive image" alt="A S U" width="120" height="80"
+                        src="https://edplus.asu.edu/sites/default/files/ASU%20Online%20logo%201.23.17.png">
+    </a>
     <h1 class="text-center" class="h1">Content Checker</h1>
     <form action="rest/upload" method="post" enctype="multipart/form-data" class="alert alert-secondary">
         <div class="form-group">
@@ -22,7 +24,7 @@
         <input type="submit" value="Submit" onclick="myFunction()" class="btn btn-primary">
     </form>
 
-
+    <p class="text-center">OR</p>
     <form action="rest/getresults" method="post" class="alert alert-secondary">
         <p class="lead">Enter any two domains to compare.</p>
         <div class="form-group">
