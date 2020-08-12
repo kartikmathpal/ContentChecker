@@ -10,7 +10,6 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 @Path("/excel")
 public class ExcelService {
 
-    //private static final String FILE_PATH = "C:\\Users\\Edplus\\Desktop\\kartikM\\ContentChecker\\src\\main\\java\\com\\kmathpal\\rest\\Model\\resturlCompare.xlsx";
     public static String path = "";
 
     public static void setPath(String path) {
@@ -30,5 +29,17 @@ public class ExcelService {
         return response.build();
 
     }
+    @GET
+    @Path("/template")
+    @Produces("application/vnd.ms-excel")
+    public Response getTemplate() {
 
+        File file = new File("/Users/kartikmathpal/Documents/JavaProjects/ContentChecker/src/main/java/com/kmathpal/rest/Model/Template/template.xlsx");
+
+        ResponseBuilder response = Response.ok((Object) file);
+        response.header("Content-Disposition",
+                "attachment; filename=template.xlsx");
+        return response.build();
+
+    }
 }

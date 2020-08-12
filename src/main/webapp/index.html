@@ -16,7 +16,7 @@
     <form action="rest/upload" method="post" enctype="multipart/form-data" class="alert alert-secondary">
         <div class="form-group">
             <label class="lead">Upload a sheet(Bulk Mode)<br>
-                Select a file :</label>
+                Select a file : <a href="/rest/excel/template">sample template</a></label>
             <input type="file" name="file" size="45" class="form-control-file"/>
         </div>
         <input type="submit" value="Submit" onclick="myFunction()" class="btn btn-primary">
@@ -26,9 +26,9 @@
     <form action="rest/getresults" method="post" class="alert alert-secondary">
         <p class="lead">Enter any two domains to compare.</p>
         <div class="form-group">
-            <label class="lead">EnvironmentA <input type="text" name="envA" placeholder="eg. asuords.edpl.us" required
+            <label class="lead">EnvironmentA <input type="text" name="envA" placeholder="eg:asuords.edpl.us" required
                                                     autofocus/>
-                EnvironmentB <input type="text" name="envB" placeholder="eg. test.asuonline.asu.edu" required
+                EnvironmentB <input type="text" name="envB" placeholder="eg:asuonline.asu.edu" required
                                     autofocus/> </label>
         </div>
         <input id="demo" onclick="myFunction()" type="submit" value="Submit" class="btn btn-primary"/>
