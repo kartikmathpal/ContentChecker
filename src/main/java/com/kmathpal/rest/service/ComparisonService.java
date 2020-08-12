@@ -84,8 +84,8 @@ public class ComparisonService {
             else
                 response += "No mismatch found";
 
-            sheet.getRow(j).getCell(2).setCellValue(misMatchFlag);
-            sheet.getRow(j).getCell(3).setCellValue(response);
+            sheet.getRow(j).createCell(2).setCellValue(misMatchFlag);
+            sheet.getRow(j).createCell(3).setCellValue(response);
         }
 
 
