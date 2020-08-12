@@ -26,66 +26,65 @@ public class ComparisonService {
         boolean misMatchFlag = false;
         String response = "";
         String mismatches = "";
-        for (int j = 1; j <= size; j++) {
+        for (int j = 1; j <= size; ) {
             response = "";
             try {
                 //Get content the google home page using Jsoup
-                    String urlA = sheet.getRow(j).getCell(0).toString();
-                    String urlB = sheet.getRow(j).getCell(1).toString();
-                    if(null!=urlA && null!=urlB) {
-                        Document docA = Jsoup.connect(sheet.getRow(j).getCell(0).toString()).get();
-                        Document docB = Jsoup.connect(sheet.getRow(j).getCell(1).toString()).get();
-                        mismatches = "";//reset
-                        for (String tag : tagList) {
-                            misMatchFlag = false;
-                            List<String> tagA = new ArrayList<>();
-                            List<String> tagB = new ArrayList<>();
-                            //fetch all the elements for = tag
-                            System.out.println("\n\n\n*******Comparing All the <" + tag + "> elements******");
-                            Elements productionDoc = docA.getElementsByTag(tag);
-                            Elements devDoc = docB.getElementsByTag(tag);
-                            //---
-                            for (Element e : productionDoc) {
-                                if (!e.text().isEmpty())
-                                    tagA.add(e.text());//tagA.add(e.ownText());
-                            }
-                            for (Element e : devDoc) {
-                                if (!e.text().isEmpty())
-                                    tagB.add(e.text()); //tagB.add(e.ownText());
+                Document docA = Jsoup.connect(sheet.getRow(j).getCell(0).toString()).get();
+                Document docB = Jsoup.connect(sheet.getRow(j).getCell(1).toString()).get();
+                mismatches = "";//reset
+                for (String tag : tagList) {
+                    misMatchFlag = false;
+                    List<String> tagA = new ArrayList<>();
+                    List<String> tagB = new ArrayList<>();
+                    //fetch all the elements for = tag
+                    System.out.println("\n\n\n*******Comparing All the <" + tag + "> elements******");
+                    Elements productionDoc = docA.getElementsByTag(tag);
+                    Elements devDoc = docB.getElementsByTag(tag);
+                    //---
+                    for (Element e : productionDoc) {
+                        if (!e.text().isEmpty())
+                            tagA.add(e.text());//tagA.add(e.ownText());
+                    }
+                    for (Element e : devDoc) {
+                        if (!e.text().isEmpty())
+                            tagB.add(e.text()); //tagB.add(e.ownText());
 
-                            }
-                            if (tagA.size() == tagB.size()) {
-                                for (int i = 0; i < tagA.size(); i++) {
-                                    if (tagA.get(i).equals(tagB.get(i)))
-                                        System.out.println("true  || " + tagA.get(i) + "<--->" + tagB.get(i));
+                    }
+                    if (tagA.size() == tagB.size()) {
+                        for (int i = 0; i < tagA.size(); i++) {
+                            if (tagA.get(i).equals(tagB.get(i)))
+                                System.out.println("true  || " + tagA.get(i) + "<--->" + tagB.get(i));
 
-                                    else {
-                                        System.out.println("false  || " + tagA.get(i) + "<--->" + tagB.get(i));
-                                        misMatchFlag = true;
-                                        mismatches += "false  || " + tagA.get(i) + "<--->" + tagB.get(i) + "\n";
-                                    }
-                                }
-                            } else {
-                                System.out.println("For tag <" + tag + "> count mismatch " + tagA.size() + "---" + tagB.size());
+                            else {
+                                System.out.println("false  || " + tagA.get(i) + "<--->" + tagB.get(i));
                                 misMatchFlag = true;
-                                mismatches += "For tag <" + tag + "> count mismatch " + tagA.size() + "---" + tagB.size() + "\n";
+                                mismatches += "false  || " + tagA.get(i) + "<--->" + tagB.get(i) + "\n";
                             }
                         }
+                    } else {
+                        System.out.println("For tag <" + tag + "> count mismatch " + tagA.size() + "---" + tagB.size());
+                        misMatchFlag = true;
+                        mismatches += "For tag <" + tag + "> count mismatch " + tagA.size() + "---" + tagB.size() + "\n";
                     }
-            } catch (IOException ioe) {
+                }
+                response = "EnvironmentA :" + sheet.getRow(j).getCell(0) + "\n" +
+                        "EnvironmentB :" + sheet.getRow(j).getCell(1) + "\n";
+                if (misMatchFlag)
+                    response += "MisMatch :" + mismatches;
+                else
+                    response += "No mismatch found";
+
+                sheet.getRow(j).createCell(2).setCellValue(misMatchFlag == true ? "Fail" : "Pass");
+
+                sheet.getRow(j).createCell(3).setCellValue(response);
+                j++;
+            } catch (Exception ioe) {
                 System.out.println("Unable to connect to the URL");
                 ioe.printStackTrace();
-
+                j++;
             }
-            response = "EnvironmentA :" + sheet.getRow(j).getCell(0) + "\n" +
-                    "EnvironmentB :" + sheet.getRow(j).getCell(1) + "\n";
-            if (misMatchFlag)
-                response += "MisMatch :" + mismatches;
-            else
-                response += "No mismatch found";
 
-            sheet.getRow(j).createCell(2).setCellValue(misMatchFlag == true ? "Fail" : "Pass");;
-            sheet.getRow(j).createCell(3).setCellValue(response);
         }
 
 
