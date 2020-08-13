@@ -20,16 +20,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ProcessEnvironmentService {
-    public void processEnvironments(String envA, String envB,String path) throws IOException, InvalidFormatException {
+    public void processEnvironments(String envA, String envB, String path) throws IOException, InvalidFormatException {
         List<String> listA = new ArrayList<>();
         List<String> listB = new ArrayList<>();
         Document doc = Jsoup.connect("https://asuords.edpl.us/preview/").get();
         Elements links = doc.select("li[class=\"list-group-item\"]");
         for (Element link : links) {
-            System.out.print("https://"+envA+link.text()+"\t");
-            System.out.println("https://"+envB+link.text());
-            listA.add("https://"+envA+link.text());
-            listB.add("https://"+envB+link.text());
+            System.out.print("https://" + envA + link.text() + "\t");
+            System.out.println("https://" + envB + link.text());
+            listA.add("https://" + envA + link.text());
+            listB.add("https://" + envB + link.text());
         }
         //access sheet to write data
         InputStream inp = new FileInputStream(path);
@@ -40,11 +40,11 @@ public class ProcessEnvironmentService {
         String response = "";
         String mismatches = "";
         //clear prev entries
-        while(sheet.getLastRowNum()>0){
+        while (sheet.getLastRowNum() > 0) {
             sheet.removeRow(sheet.getRow(sheet.getLastRowNum()));
         }
 
-        for (int j = 0, r = 1; j < 10/*listA.size()*/; j++, r++) {
+        for (int j = 0, r = 1; j < listA.size(); j++, r++) {
             Row row = sheet.createRow(r);
             response = "";
             try {
@@ -54,8 +54,6 @@ public class ProcessEnvironmentService {
                 Document docB = Jsoup.connect(listB.get(j)).get();//store in sheet
                 row.createCell(0).setCellValue(listA.get(j).toString());
                 row.createCell(1).setCellValue(listB.get(j).toString());
-
-
                 mismatches = "";//reset
                 for (String tag : tagList) {
                     misMatchFlag = false;
@@ -92,15 +90,22 @@ public class ProcessEnvironmentService {
                         System.out.println(tagA);
                         System.out.println(tagB);
                         misMatchFlag = true;
-                        mismatches += "For tag <" + tag + "> count mismatch " + tagA.size() + "---" + tagB.size() + "\n";
+                        mismatches += "For tag <" + tag + "> count mismatch " + tagA.size() + "---" + tagB.size() + "\n" +
+                                "tag list:\n" +
+                                "envA : " + tagA + "\n" +
+                                "envB : " + tagB + "\n" +
+                                "}";
                     }
                 }
-//                response="Prod URL :"+sheet.getRow(j).getCell(0)+"\n"+
-//                        "Dev URL :"+sheet.getRow(j).getCell(1)+"\n";
-//                if(misMatchFlag)
-//                    response+="MisMatch :" + mismatches;
-//                row.createCell(2).setCellValue(misMatchFlag);
-//                row.createCell(3).setCellValue(response);
+
+                response = "{\nEnvironmentA   :" + listA.get(j).toString() + "\n" +
+                        "EnvironmentB   :" + listB.get(j).toString() + "\n";
+                if (misMatchFlag)
+                    response += "MisMatch :\n" + mismatches;
+                else
+                    response += "No MisMatch\n}";
+                row.createCell(2).setCellValue(misMatchFlag == true ? "Fail" : "Pass");
+                row.createCell(3).setCellValue(response);
             } catch (Exception e) {
 
                 System.out.println("Exception Ocurred For--->" + listA.get(j) + "  ||  " + listB.get(j));
@@ -108,14 +113,14 @@ public class ProcessEnvironmentService {
                 j++;
                 //r++;
             }
-            response = "{\nEnvironmentA   :" + listA.get(j).toString() + "\n" +
-                    "EnvironmentB   :" + listB.get(j).toString() + "\n";
-            if (misMatchFlag)
-                response += "MisMatch :\n" + mismatches;
-            else
-                response += "No MisMatch\n}";
-            row.createCell(2).setCellValue(misMatchFlag == true ? "Fail" : "Pass");
-            row.createCell(3).setCellValue(response);
+//            response = "{\nEnvironmentA   :" + listA.get(j).toString() + "\n" +
+//                    "EnvironmentB   :" + listB.get(j).toString() + "\n";
+//            if (misMatchFlag)
+//                response += "MisMatch :\n" + mismatches;
+//            else
+//                response += "No MisMatch\n}";
+//            row.createCell(2).setCellValue(misMatchFlag == true ? "Fail" : "Pass");
+//            row.createCell(3).setCellValue(response);
         }
 
         //save data to file:
