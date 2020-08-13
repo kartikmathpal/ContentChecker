@@ -35,7 +35,7 @@ public class ProcessEnvironmentService {
         InputStream inp = new FileInputStream(path);
         Workbook workbook = WorkbookFactory.create(inp);
         Sheet sheet = workbook.getSheetAt(0);
-        List<String> tagList = new ArrayList<>(Arrays.asList("title", "h1", "h2", "h3", "h4", "h5", "h6", "p", "a", "href", "ul", "li"));
+        List<String> tagList = new ArrayList<>(Arrays.asList("title","div","h1", "h2", "h3", "h4", "h5", "h6", "p", "a", "href", "ul", "li"));
         boolean misMatchFlag = false;
         String response = "";
         String mismatches = "";
