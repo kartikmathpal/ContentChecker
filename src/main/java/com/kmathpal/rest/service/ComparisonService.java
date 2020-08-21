@@ -96,10 +96,10 @@ public class ComparisonService {
                 j++;
 
             } catch (Exception ioe) {
-                System.out.println("Unable to connect to the URL");
-                ioe.printStackTrace();
                 sheet.getRow(j).createCell(2).setCellValue("Fail");
                 sheet.getRow(j).createCell(3).setCellValue("404: Unable to connect to the URL");
+                System.out.println("Unable to connect to the URL");
+                ioe.printStackTrace();
                 j++;
             }
         }
