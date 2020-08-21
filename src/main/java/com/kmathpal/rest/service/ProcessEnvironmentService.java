@@ -35,98 +35,102 @@ public class ProcessEnvironmentService {
         InputStream inp = new FileInputStream(path);
         Workbook workbook = WorkbookFactory.create(inp);
         Sheet sheet = workbook.getSheetAt(0);
-        List<String> tagList = new ArrayList<>(Arrays.asList("title","span","h1", "h2", "h3", "h4", "h5", "h6", "p", "a", "href", "ul", "li"));
-        boolean misMatchFlag = false;
-        String response = "";
-        String mismatches = "";
+        //##
+
         //clear prev entries
         while (sheet.getLastRowNum() > 0) {
             sheet.removeRow(sheet.getRow(sheet.getLastRowNum()));
         }
 
-        for (int j = 0, r = 1; j < 50; j++, r++) {
+        for (int j = 0,r=1; j < 20; j++,r++) {
 
             Row row = sheet.createRow(r);
             //remove later
-            if(j==5)
-                continue;
-
-            response = "";
+//            if(j==5)
+//                continue;
+            StringBuilder resp = new StringBuilder();
+            StringBuilder resp1 = new StringBuilder();
             try {
 
                 //Get content the google home page using Jsoup
+                String urlA = listA.get(j);
+                String urlB = listB.get(j);
+                resp.append("{\nURLA :" + urlA);
+                resp.append("\nURLB :" + urlB);
                 Document docA = Jsoup.connect(listA.get(j)).get();//store in sheet
                 Document docB = Jsoup.connect(listB.get(j)).get();//store in sheet
                 row.createCell(0).setCellValue(listA.get(j).toString());
                 row.createCell(1).setCellValue(listB.get(j).toString());
-                mismatches = "";//reset
-                for (String tag : tagList) {
-                    misMatchFlag = false;
-                    List<String> tagA = new ArrayList<>();
-                    List<String> tagB = new ArrayList<>();
+                Elements elementsOfDocA = docA.body().select("*");
+                Elements elementsOfDocB = docB.body().select("*");
+                boolean mismatch = false;
 
-                    //fetch all the elements for = tag
-                    System.out.println("\n\n\n*******Comparing All the <" + tag + "> elements******");
-                    Elements productionDoc = docA.getElementsByTag(tag);
-                    Elements devDoc = docB.getElementsByTag(tag);
-                    //---
-                    for (Element e : productionDoc) {
-                        if (!e.text().isEmpty())
-                            tagA.add(e.text());//tagA.add(e.ownText());
-                    }
-                    for (Element e : devDoc) {
-                        if (!e.text().isEmpty())
-                            tagB.add(e.text()); //tagB.add(e.ownText());
-
-                    }
-                    if (tagA.size() == tagB.size()) {
-                        for (int i = 0; i < tagA.size(); i++) {
-                            if (tagA.get(i).equals(tagB.get(i)))
-                                System.out.println("true  || " + tagA.get(i) + "<--->" + tagB.get(i));
-
-                            else {
-                                System.out.println("false  || " + tagA.get(i) + "<--->" + tagB.get(i));
-                                misMatchFlag = true;
-                                mismatches += "false  || " + tagA.get(i) + "<--->" + tagB.get(i) + "\n";
-                            }
+                if (elementsOfDocA.size() == elementsOfDocB.size()) {
+                    for (int i = 0; i < elementsOfDocA.size(); i++) {
+                        if (!elementsOfDocA.get(i).ownText().equals(elementsOfDocB.get(i).ownText()) ? true : false) {
+                            mismatch = true;
+                            resp1.append("\n" + "<" + elementsOfDocA.get(i).tagName() + ">" + elementsOfDocA.get(i).ownText() + "||"
+                                    + "<" + elementsOfDocB.get(i).tagName() + ">" + elementsOfDocB.get(i).ownText() + "||"
+                                    + (elementsOfDocA.get(i).ownText().equals(elementsOfDocB.get(i).ownText()) ? true : false));
                         }
-                    } else {
-                        System.out.println("For tag <" + tag + "> count mismatch " + tagA.size() + "---" + tagB.size());
-                        System.out.println(tagA);
-                        System.out.println(tagB);
-                        misMatchFlag = true;
-                        mismatches += "For tag <" + tag + "> count mismatch " + tagA.size() + "---" + tagB.size() + "\n" +
-                                "tag list:\n" +
-                                "envA : " + tagA + "\n" +
-                                "envB : " + tagB + "\n" +
-                                "}";
+                    }
+
+                } else {
+                    //when tags are missing
+                    mismatch = true;
+                    List<String> elementTextDocA = new ArrayList<>();
+                    List<String> elementTextDocB = new ArrayList<>();
+
+                    for (Element e : elementsOfDocA)
+                        elementTextDocA.add(e.ownText());
+
+                    for (Element e : elementsOfDocB)
+                        elementTextDocB.add(e.ownText());
+
+                    List<String> presentInANotInB = new ArrayList<>();
+                    List<String> presentInBNotInA = new ArrayList<>();
+
+                    for (String e : elementTextDocA)
+                        if (!elementTextDocB.contains(e))
+                            presentInANotInB.add(e);
+
+                    for (String e : elementTextDocB)
+                        if (!elementTextDocA.contains(e))
+                            presentInBNotInA.add(e);
+
+                    if (presentInANotInB.size() > 0) {
+                        resp1.append("<< Content present in " + urlA + " and absent in " + urlB + " >>");
+                        for (String s : presentInANotInB)
+                            resp1.append("\n\t" + s);
+                    }
+
+                    if (presentInBNotInA.size() > 0) {
+                        resp1.append("\n<< Content present in " + urlB + " and absent in " + urlA + " >>");
+                        for (String s : presentInBNotInA)
+                            resp1.append("\n\t" + s);
                     }
                 }
 
-                response = "{\nEnvironmentA   :" + listA.get(j).toString() + "\n" +
-                        "EnvironmentB   :" + listB.get(j).toString() + "\n";
-                if (misMatchFlag)
-                    response += "MisMatch :\n" + mismatches;
-                else
-                    response += "No MisMatch\n}";
-                row.createCell(2).setCellValue(misMatchFlag == true ? "Fail" : "Pass");
-                row.createCell(3).setCellValue(response);
+                if (!mismatch)
+                    resp.append("\nMismatch :False");
+                else {
+                    resp.append("\nMismatch :True");
+                    resp.append("\n" + resp1);
+                }
+                resp.append("\n}");
+                //System.out.println(resp.toString());
+
+                //###############
+                row.createCell(2).setCellValue(mismatch == true ? "Fail" : "Pass");
+                row.createCell(3).setCellValue(resp.toString());
             } catch (Exception e) {
 
                 System.out.println("Exception Ocurred For--->" + listA.get(j) + "  ||  " + listB.get(j));
                 e.printStackTrace();
                 j++;
-                //r++;
             }
-//            response = "{\nEnvironmentA   :" + listA.get(j).toString() + "\n" +
-//                    "EnvironmentB   :" + listB.get(j).toString() + "\n";
-//            if (misMatchFlag)
-//                response += "MisMatch :\n" + mismatches;
-//            else
-//                response += "No MisMatch\n}";
-//            row.createCell(2).setCellValue(misMatchFlag == true ? "Fail" : "Pass");
-//            row.createCell(3).setCellValue(response);
         }
+
 
         //save data to file:
         inp.close();

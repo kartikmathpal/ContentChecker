@@ -21,81 +21,91 @@ public class ComparisonService {
         Workbook workbook = WorkbookFactory.create(inp);
         Sheet sheet = workbook.getSheetAt(0);
         int size = sheet.getLastRowNum();
-
-        List<String> tagList = new ArrayList<>(Arrays.asList("title", "h1", "h2", "h3", "h4", "h5", "h6", "p", "a", "href", "ul", "li"));
-        boolean misMatchFlag = false;
-        String response = "";
-        String mismatches = "";
         for (int j = 1; j <= size; ) {
-            response = "";
             try {
-                //Get content the google home page using Jsoup
-                Document docA = Jsoup.connect(sheet.getRow(j).getCell(0).toString()).get();
-                Document docB = Jsoup.connect(sheet.getRow(j).getCell(1).toString()).get();
-                mismatches = "";//reset
-                for (String tag : tagList) {
-                    misMatchFlag = false;
-                    List<String> tagA = new ArrayList<>();
-                    List<String> tagB = new ArrayList<>();
-                    //fetch all the elements for = tag
-                    System.out.println("\n\n\n*******Comparing All the <" + tag + "> elements******");
-                    Elements productionDoc = docA.getElementsByTag(tag);
-                    Elements devDoc = docB.getElementsByTag(tag);
-                    //---
-                    for (Element e : productionDoc) {
-                        if (!e.text().isEmpty())
-                            tagA.add(e.text());//tagA.add(e.ownText());
-                    }
-                    for (Element e : devDoc) {
-                        if (!e.text().isEmpty())
-                            tagB.add(e.text()); //tagB.add(e.ownText());
+                boolean mismatch = false;
+                StringBuilder resp = new StringBuilder();
+                StringBuilder resp1 = new StringBuilder();
+                String urlA = sheet.getRow(j).getCell(0).toString();
+                String urlB = sheet.getRow(j).getCell(1).toString();
+                Document docA = Jsoup.connect(urlA).get();
+                Document docB = Jsoup.connect(urlB).get();
+                resp.append("{\nURLA :" + urlA);
+                resp.append("\nURLB :" + urlB);
 
-                    }
-                    if (tagA.size() == tagB.size()) {
-                        for (int i = 0; i < tagA.size(); i++) {
-                            if (tagA.get(i).equals(tagB.get(i)))
-                                System.out.println("true  || " + tagA.get(i) + "<--->" + tagB.get(i));
+                Elements elementsOfDocA = docA.body().select("*");
+                Elements elementsOfDocB = docB.body().select("*");
 
-                            else {
-                                System.out.println("false  || " + tagA.get(i) + "<--->" + tagB.get(i));
-                                misMatchFlag = true;
-                                mismatches += "false  || " + tagA.get(i) + "<--->" + tagB.get(i) + "\n";
-                            }
+                if (elementsOfDocA.size() == elementsOfDocB.size()) {
+                    for (int i = 0; i < elementsOfDocA.size(); i++) {
+                        if (!elementsOfDocA.get(i).ownText().equals(elementsOfDocB.get(i).ownText()) ? true : false) {
+                            mismatch = true;
+                            resp1.append("\n" + "<" + elementsOfDocA.get(i).tagName() + ">" + elementsOfDocA.get(i).ownText() + "||"
+                                    + "<" + elementsOfDocB.get(i).tagName() + ">" + elementsOfDocB.get(i).ownText() + "||"
+                                    + (elementsOfDocA.get(i).ownText().equals(elementsOfDocB.get(i).ownText()) ? true : false));
                         }
-                    } else {
-                        System.out.println("For tag <" + tag + "> count mismatch " + tagA.size() + "---" + tagB.size());
-                        misMatchFlag = true;
-                        mismatches += "For tag <" + tag + "> count mismatch " + tagA.size() + "---" + tagB.size() + "\n";
                     }
+
+                } else {
+                    //when tags are missing
+                    mismatch = true;
+                    List<String> elementTextDocA = new ArrayList<>();
+                    List<String> elementTextDocB = new ArrayList<>();
+
+                    for (Element e : elementsOfDocA)
+                        elementTextDocA.add(e.ownText());
+
+                    for (Element e : elementsOfDocB)
+                        elementTextDocB.add(e.ownText());
+
+                    List<String> presentInANotInB = new ArrayList<>();
+                    List<String> presentInBNotInA = new ArrayList<>();
+
+                    for (String e : elementTextDocA)
+                        if (!elementTextDocB.contains(e))
+                            presentInANotInB.add(e);
+
+                    for (String e : elementTextDocB)
+                        if (!elementTextDocA.contains(e))
+                            presentInBNotInA.add(e);
+
+                    if (presentInANotInB.size() > 0) {
+                        resp1.append("<< Content present in " + urlA + " and absent in " + urlB + " >>");
+                        for (String s : presentInANotInB)
+                            resp1.append("\n\t" + s);
+                    }
+
+                    if (presentInBNotInA.size() > 0) {
+                        resp1.append("\n<< Content present in " + urlB + " and absent in " + urlA + " >>");
+                        for (String s : presentInBNotInA)
+                            resp1.append("\n\t" + s);
+                    }
+
                 }
-                response = "EnvironmentA :" + sheet.getRow(j).getCell(0) + "\n" +
-                        "EnvironmentB :" + sheet.getRow(j).getCell(1) + "\n";
-                if (misMatchFlag)
-                    response += "MisMatch :" + mismatches;
-                else
-                    response += "No mismatch found";
-
-                sheet.getRow(j).createCell(2).setCellValue(misMatchFlag == true ? "Fail" : "Pass");
-
-                sheet.getRow(j).createCell(3).setCellValue(response);
+                if (!mismatch)
+                    resp.append("\nMismatch :False");
+                else {
+                    resp.append("\nMismatch :True");
+                    resp.append("\n" + resp1);
+                }
+                resp.append("\n}");
+                //System.out.println(resp.toString());
+                sheet.getRow(j).createCell(2).setCellValue(mismatch == true ? "Fail" : "Pass");
+                sheet.getRow(j).createCell(3).setCellValue(resp.toString());
                 j++;
+
             } catch (Exception ioe) {
                 System.out.println("Unable to connect to the URL");
                 ioe.printStackTrace();
                 j++;
             }
-
         }
-
-
         //save data to file:
         inp.close();
         FileOutputStream fileOut = new FileOutputStream(path);
         workbook.write(fileOut);
         fileOut.close();
 
-        // Closing the workbook
-        //workbook.close();
 
     }
 }
