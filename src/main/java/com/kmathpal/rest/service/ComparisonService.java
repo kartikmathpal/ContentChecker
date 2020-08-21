@@ -20,6 +20,7 @@ public class ComparisonService {
         InputStream inp = new FileInputStream(path);
         Workbook workbook = WorkbookFactory.create(inp);
         Sheet sheet = workbook.getSheetAt(0);
+
         int size = sheet.getLastRowNum();
         for (int j = 1; j <= size; ) {
             try {
@@ -96,7 +97,10 @@ public class ComparisonService {
 
             } catch (Exception ioe) {
                 System.out.println("Unable to connect to the URL");
+                sheet.getRow(j).createCell(2).setCellValue("Fail");
+                sheet.getRow(j).createCell(3).setCellValue("404: Unable to connect to the URL");
                 ioe.printStackTrace();
+
                 j++;
             }
         }
